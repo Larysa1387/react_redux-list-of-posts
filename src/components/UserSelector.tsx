@@ -15,6 +15,7 @@ export const UserSelector: React.FC = () => {
     if (!expanded) {
       return;
     }
+
     const handleDocumentClick = () => {
       setExpanded(false);
     };
