@@ -9,9 +9,9 @@ import { Comment } from '../types/Comment';
 /* eslint-disable no-param-reassign */
 
 const initialState = {
-  comments: [] as Comment[],
-  error: '',
-  commentsIsLoading: false,
+  items: [] as Comment[],
+  hasError: '',
+  loaded: false,
 };
 
 export const fetchComments = createAsyncThunk(
@@ -43,41 +43,39 @@ export const commentsSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchComments.pending, state => {
-      state.commentsIsLoading = true;
+      state.loaded = true;
     });
     builder.addCase(fetchComments.fulfilled, (state, action) => {
-      state.comments = action.payload;
-      state.commentsIsLoading = false;
+      state.items = action.payload;
+      state.loaded = false;
     });
     builder.addCase(fetchComments.rejected, (state, action) => {
-      state.error = action.error.message || 'Something went wrong';
-      state.commentsIsLoading = false;
+      state.hasError = action.error.message || 'Something went wrong';
+      state.loaded = false;
     });
 
     builder.addCase(addComment.pending, state => {
-      state.commentsIsLoading = true;
+      state.loaded = true;
     });
     builder.addCase(addComment.fulfilled, (state, action) => {
-      state.comments.push(action.payload);
-      state.commentsIsLoading = false;
+      state.items.push(action.payload);
+      state.loaded = false;
     });
     builder.addCase(addComment.rejected, (state, action) => {
-      state.error = action.error.message || 'Something went wrong';
-      state.commentsIsLoading = false;
+      state.hasError = action.error.message || 'Something went wrong';
+      state.loaded = false;
     });
 
     builder.addCase(deleteComment.pending, state => {
-      state.commentsIsLoading = true;
+      state.loaded = true;
     });
     builder.addCase(deleteComment.fulfilled, (state, action) => {
-      state.comments = state.comments.filter(
-        comment => comment.id !== action.payload,
-      );
-      state.commentsIsLoading = false;
+      state.items = state.items.filter(item => item.id !== action.payload);
+      state.loaded = false;
     });
     builder.addCase(deleteComment.rejected, (state, action) => {
-      state.error = action.error.message || 'Something went wrong';
-      state.commentsIsLoading = false;
+      state.hasError = action.error.message || 'Something went wrong';
+      state.loaded = false;
     });
   },
 });

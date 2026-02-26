@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { addComment } from '../features/commentsSlice';
 
 export const NewCommentForm: React.FC = () => {
-  const { selectedPost } = useAppSelector(state => state.posts);
-  const { commentsIsLoading } = useAppSelector(state => state.comments);
+  const { selectedPost } = useAppSelector(state => state.selectedPost);
+  const { loaded } = useAppSelector(state => state.comments);
 
   const dispatch = useAppDispatch();
 
@@ -179,7 +179,7 @@ export const NewCommentForm: React.FC = () => {
           <button
             type="submit"
             className={classNames('button', 'is-link', {
-              'is-loading': commentsIsLoading,
+              'is-loading': loaded,
             })}
           >
             Add

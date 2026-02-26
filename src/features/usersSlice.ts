@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { User } from '../types/User';
 import { getUsers } from '../api/users';
 
@@ -8,7 +8,6 @@ const initialState = {
   users: null as User[] | null,
   error: '',
   usersIsLoading: false,
-  currentUser: null as User | null,
 };
 
 export const fetchUsers = createAsyncThunk('users/fetch', () => {
@@ -18,11 +17,7 @@ export const fetchUsers = createAsyncThunk('users/fetch', () => {
 export const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {
-    setCurrentUser: (state, action: PayloadAction<User>) => {
-      state.currentUser = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchUsers.pending, state => {
       state.usersIsLoading = true;
@@ -38,5 +33,4 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { setCurrentUser } = usersSlice.actions;
 export default usersSlice.reducer;

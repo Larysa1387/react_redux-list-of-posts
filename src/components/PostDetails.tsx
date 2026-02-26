@@ -5,10 +5,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { fetchComments, deleteComment } from '../features/commentsSlice';
 
 export const PostDetails: React.FC = () => {
-  const { selectedPost } = useAppSelector(state => state.posts);
-  const { comments, error, commentsIsLoading } = useAppSelector(
-    state => state.comments,
-  );
+  const { selectedPost } = useAppSelector(state => state.selectedPost);
+  const { items, hasError, loaded } = useAppSelector(state => state.comments);
   const dispatch = useAppDispatch();
   const [visible, setVisible] = useState(false);
 
@@ -33,25 +31,25 @@ export const PostDetails: React.FC = () => {
       </div>
 
       <div className="block">
-        {commentsIsLoading && <Loader />}
+        {loaded && <Loader />}
 
-        {!commentsIsLoading && error && (
+        {!loaded && hasError && (
           <div className="notification is-danger" data-cy="CommentsError">
             Something went wrong
           </div>
         )}
 
-        {!commentsIsLoading && !error && comments.length === 0 && (
+        {!loaded && !hasError && items.length === 0 && (
           <p className="title is-4" data-cy="NoCommentsMessage">
             No comments yet
           </p>
         )}
 
-        {!commentsIsLoading && !error && comments.length > 0 && (
+        {!loaded && !hasError && items.length > 0 && (
           <>
             <p className="title is-4">Comments:</p>
 
-            {comments.map(comment => (
+            {items.map(comment => (
               <article
                 className="message is-small"
                 key={comment.id}
@@ -83,7 +81,7 @@ export const PostDetails: React.FC = () => {
           </>
         )}
 
-        {!commentsIsLoading && !error && !visible && (
+        {!loaded && !hasError && !visible && (
           <button
             data-cy="WriteCommentButton"
             type="button"
@@ -94,7 +92,7 @@ export const PostDetails: React.FC = () => {
           </button>
         )}
 
-        {!error && visible && <NewCommentForm />}
+        {!hasError && visible && <NewCommentForm />}
       </div>
     </div>
   );

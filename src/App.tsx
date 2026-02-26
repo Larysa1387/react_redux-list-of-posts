@@ -11,22 +11,17 @@ import { Loader } from './components/Loader';
 
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { fetchUsers } from './features/usersSlice';
-import {
-  fetchUserPosts,
-  setSelectedPost,
-  clearPosts,
-} from './features/postsSlice';
+import { fetchUserPosts, clearPosts } from './features/postsSlice';
+import { setSelectedPost } from './features/selectedPostSlice';
 
 /* eslint-disable @typescript-eslint/indent */
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { currentUser, usersIsLoading, error } = useAppSelector(
-    state => state.users,
-  );
-  const { posts, selectedPost, postsIsLoading, postError } = useAppSelector(
-    state => state.posts,
-  );
+  const { usersIsLoading, error } = useAppSelector(state => state.users);
+  const { currentUser } = useAppSelector(state => state.author);
+  const { items, loaded, hasError } = useAppSelector(state => state.posts);
+  const { selectedPost } = useAppSelector(state => state.selectedPost);
 
   function loadUserPosts(userId: number) {
     dispatch(fetchUserPosts(userId));
@@ -63,13 +58,13 @@ export const App: React.FC = () => {
                   <p data-cy="NoSelectedUser">No user selected</p>
                 )}
 
-                {(usersIsLoading || postsIsLoading) && <Loader />}
+                {(usersIsLoading || loaded) && <Loader />}
 
                 {currentUser &&
                   !usersIsLoading &&
-                  !postsIsLoading &&
+                  !loaded &&
                   !error &&
-                  postError && (
+                  hasError && (
                     <div
                       className="notification is-danger"
                       data-cy="PostsLoadingError"
@@ -78,22 +73,15 @@ export const App: React.FC = () => {
                     </div>
                   )}
 
-                {currentUser &&
-                  !postsIsLoading &&
-                  !postError &&
-                  posts.length === 0 && (
-                    <div
-                      className="notification is-warning"
-                      data-cy="NoPostsYet"
-                    >
-                      No posts yet
-                    </div>
-                  )}
+                {currentUser && !loaded && !hasError && items.length === 0 && (
+                  <div className="notification is-warning" data-cy="NoPostsYet">
+                    No posts yet
+                  </div>
+                )}
 
-                {currentUser &&
-                  !postsIsLoading &&
-                  !error &&
-                  posts.length > 0 && <PostsList />}
+                {currentUser && !loaded && !error && items.length > 0 && (
+                  <PostsList />
+                )}
               </div>
             </div>
           </div>
