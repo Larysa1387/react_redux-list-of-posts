@@ -30,8 +30,8 @@ export const addComment = createAsyncThunk(
 
 export const deleteComment = createAsyncThunk(
   'comments/delete',
-  (commentId: number) => {
-    delComment(commentId);
+  async (commentId: number) => {
+    await delComment(commentId);
 
     return commentId;
   },
