@@ -24,7 +24,7 @@ export const App: React.FC = () => {
   const { currentUser, usersIsLoading, error } = useAppSelector(
     state => state.users,
   );
-  const { posts, selectedPost, postsIsLoading } = useAppSelector(
+  const { posts, selectedPost, postsIsLoading, postError } = useAppSelector(
     state => state.posts,
   );
 
@@ -65,18 +65,22 @@ export const App: React.FC = () => {
 
                 {(usersIsLoading || postsIsLoading) && <Loader />}
 
-                {currentUser && usersIsLoading && postsIsLoading && error && (
-                  <div
-                    className="notification is-danger"
-                    data-cy="PostsLoadingError"
-                  >
-                    Something went wrong!
-                  </div>
-                )}
+                {currentUser &&
+                  !usersIsLoading &&
+                  !postsIsLoading &&
+                  !error &&
+                  postError && (
+                    <div
+                      className="notification is-danger"
+                      data-cy="PostsLoadingError"
+                    >
+                      Something went wrong!
+                    </div>
+                  )}
 
                 {currentUser &&
                   !postsIsLoading &&
-                  !error &&
+                  !postError &&
                   posts.length === 0 && (
                     <div
                       className="notification is-warning"
@@ -85,6 +89,7 @@ export const App: React.FC = () => {
                       No posts yet
                     </div>
                   )}
+
                 {currentUser &&
                   !postsIsLoading &&
                   !error &&

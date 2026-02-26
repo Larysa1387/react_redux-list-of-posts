@@ -7,7 +7,7 @@ import { Post } from '../types/Post';
 const initialState = {
   selectedPost: null as Post | null,
   posts: [] as Post[],
-  error: '',
+  postError: '',
   postsIsLoading: false,
 };
 
@@ -38,7 +38,7 @@ export const postsSlice = createSlice({
       state.postsIsLoading = false;
     });
     builder.addCase(fetchUserPosts.rejected, (state, action) => {
-      state.error = action.error.message || 'Something went wrong';
+      state.postError = action.error.message || 'Something went wrong';
       state.postsIsLoading = false;
     });
   },
